@@ -14,7 +14,170 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      card_types: {
+        Row: {
+          id: string
+          name: string
+        }
+        Insert: {
+          id?: string
+          name: string
+        }
+        Update: {
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      cards: {
+        Row: {
+          card_name: string | null
+          card_number: string | null
+          card_type: string
+          cert_number: string | null
+          copy_number: string | null
+          created_at: string
+          driver_id: string
+          grade: string | null
+          grading_company: string | null
+          id: string
+          image_back_url: string | null
+          image_front_url: string | null
+          is_graded: boolean
+          is_landscape: boolean
+          notes: string | null
+          parallel: string
+          print_run: string | null
+          set_name: string
+          sort_order: number
+          status: string
+          team: string | null
+          year: number
+        }
+        Insert: {
+          card_name?: string | null
+          card_number?: string | null
+          card_type?: string
+          cert_number?: string | null
+          copy_number?: string | null
+          created_at?: string
+          driver_id: string
+          grade?: string | null
+          grading_company?: string | null
+          id?: string
+          image_back_url?: string | null
+          image_front_url?: string | null
+          is_graded?: boolean
+          is_landscape?: boolean
+          notes?: string | null
+          parallel?: string
+          print_run?: string | null
+          set_name: string
+          sort_order?: number
+          status?: string
+          team?: string | null
+          year: number
+        }
+        Update: {
+          card_name?: string | null
+          card_number?: string | null
+          card_type?: string
+          cert_number?: string | null
+          copy_number?: string | null
+          created_at?: string
+          driver_id?: string
+          grade?: string | null
+          grading_company?: string | null
+          id?: string
+          image_back_url?: string | null
+          image_front_url?: string | null
+          is_graded?: boolean
+          is_landscape?: boolean
+          notes?: string | null
+          parallel?: string
+          print_run?: string | null
+          set_name?: string
+          sort_order?: number
+          status?: string
+          team?: string | null
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cards_driver_id_fkey"
+            columns: ["driver_id"]
+            isOneToOne: false
+            referencedRelation: "drivers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      drivers: {
+        Row: {
+          avatar_type: string
+          avatar_value: string | null
+          collection_type: string
+          color_hex: string
+          created_at: string
+          id: string
+          name: string
+          sort_order: number
+          team: string | null
+        }
+        Insert: {
+          avatar_type?: string
+          avatar_value?: string | null
+          collection_type?: string
+          color_hex?: string
+          created_at?: string
+          id?: string
+          name: string
+          sort_order?: number
+          team?: string | null
+        }
+        Update: {
+          avatar_type?: string
+          avatar_value?: string | null
+          collection_type?: string
+          color_hex?: string
+          created_at?: string
+          id?: string
+          name?: string
+          sort_order?: number
+          team?: string | null
+        }
+        Relationships: []
+      }
+      parallels: {
+        Row: {
+          id: string
+          name: string
+        }
+        Insert: {
+          id?: string
+          name: string
+        }
+        Update: {
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      sets: {
+        Row: {
+          id: string
+          name: string
+        }
+        Insert: {
+          id?: string
+          name: string
+        }
+        Update: {
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
