@@ -9,7 +9,6 @@ interface Props {
 export default function BinderView({ cards, driver }: Props) {
   const navigate = useNavigate();
 
-  // Group cards by set+year into binder pages of 9
   const grouped: { label: string; cards: Card[] }[] = [];
   const bySet: Record<string, Card[]> = {};
 
@@ -25,7 +24,6 @@ export default function BinderView({ cards, driver }: Props) {
     }
   });
 
-  // If no grouping, show all as one page
   if (grouped.length === 0 && cards.length > 0) {
     for (let i = 0; i < cards.length; i += 9) {
       grouped.push({ label: "All Cards", cards: cards.slice(i, i + 9) });
@@ -40,19 +38,28 @@ export default function BinderView({ cards, driver }: Props) {
     );
   }
 
+  const pillStyle: React.CSSProperties = {
+    backgroundColor: "rgba(10,10,10,0.6)",
+    color: "white",
+    fontSize: "9px",
+    padding: "2px 4px",
+    borderRadius: "3px",
+    lineHeight: 1,
+  };
+
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-10 mx-6">
       {grouped.map((page, pageIdx) => (
         <div key={pageIdx}>
           <div className="text-label mb-3">{page.label}</div>
-          <div className="grid grid-cols-3 gap-[2px] bg-border rounded-lg overflow-hidden max-w-[540px]">
+          <div className="grid grid-cols-3 gap-3">
             {Array.from({ length: 9 }).map((_, slotIdx) => {
               const card = page.cards[slotIdx];
               if (!card) {
                 return (
                   <div
                     key={slotIdx}
-                    className="bg-card aspect-[2.5/3.5] relative"
+                    className="bg-card aspect-[2.5/3.5] rounded-lg overflow-hidden"
                   />
                 );
               }
@@ -60,14 +67,13 @@ export default function BinderView({ cards, driver }: Props) {
                 <button
                   key={card.id}
                   onClick={() => navigate(`/card/${card.id}`)}
-                  className="bg-card aspect-[2.5/3.5] relative overflow-hidden group cursor-pointer"
+                  className="bg-card aspect-[2.5/3.5] rounded-lg overflow-hidden relative cursor-pointer"
                 >
                   {card.image_front_url ? (
                     <img
                       src={card.image_front_url}
                       alt={card.card_name ?? ""}
                       className={`absolute inset-0 w-full h-full object-cover
-                        ${card.is_landscape ? "rotate-90 scale-[1.4]" : ""}
                         ${card.status === "wishlist" ? "grayscale opacity-50" : ""}`}
                     />
                   ) : (
@@ -75,7 +81,6 @@ export default function BinderView({ cards, driver }: Props) {
                       <span className="text-[11px] text-muted-foreground">No Image</span>
                     </div>
                   )}
-                  {/* Status overlays */}
                   {card.status === "purchased" && (
                     <div className="absolute inset-0 flex items-center justify-center"
                       style={{ backgroundColor: "rgba(180,0,0,0.45)" }}>
@@ -87,14 +92,13 @@ export default function BinderView({ cards, driver }: Props) {
                       <span className="text-[11px] font-medium tracking-wide" style={{ color: "white" }}>Wishlist</span>
                     </div>
                   )}
-                  {/* Hover overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-200 ease-out"
-                    style={{ backgroundColor: "rgba(20,20,20,0.75)" }}>
-                    <div className="px-2 py-1.5">
-                      <div className="text-[9px] font-medium" style={{ color: "white" }}>{card.card_name || card.card_number}</div>
-                      <div className="text-[8px]" style={{ color: "rgba(255,255,255,0.6)" }}>{card.set_name} · {card.parallel}</div>
-                    </div>
-                  </div>
+                  {/* Floating pills */}
+                  <span className="absolute top-1.5 left-1.5 font-medium" style={pillStyle}>
+                    {card.parallel}
+                  </span>
+                  <span className="absolute top-1.5 right-1.5 font-medium" style={pillStyle}>
+                    {card.year}
+                  </span>
                 </button>
               );
             })}
