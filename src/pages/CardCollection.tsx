@@ -1,12 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronLeft, Grid3X3, List, ArrowUpDown, Plus } from "lucide-react";
+import { ChevronLeft, Grid3X3, LayoutGrid, List, Plus } from "lucide-react";
 import type { Driver, Card, ViewMode } from "@/lib/types";
 import { useState } from "react";
 import BinderView from "@/components/BinderView";
 import ListView from "@/components/ListView";
-import SortView from "@/components/SortView";
+import ScrollView from "@/components/ScrollView";
 import AddCardDialog from "@/components/AddCardDialog";
 
 export default function CardCollection() {
@@ -43,8 +43,8 @@ export default function CardCollection() {
 
   const viewButtons: { mode: ViewMode; icon: typeof Grid3X3; label: string }[] = [
     { mode: "binder", icon: Grid3X3, label: "Binder" },
+    { mode: "scroll", icon: LayoutGrid, label: "Scroll" },
     { mode: "list", icon: List, label: "List" },
-    { mode: "sort", icon: ArrowUpDown, label: "Sort" },
   ];
 
   return (
@@ -98,8 +98,8 @@ export default function CardCollection() {
       </header>
       <main className="px-12 py-8">
         {viewMode === "binder" && <BinderView cards={cards ?? []} driver={driver} />}
+        {viewMode === "scroll" && <ScrollView cards={cards ?? []} driver={driver} />}
         {viewMode === "list" && <ListView cards={cards ?? []} driver={driver} />}
-        {viewMode === "sort" && <SortView cards={cards ?? []} driver={driver} />}
       </main>
       <AddCardDialog
         open={showAddCard}
