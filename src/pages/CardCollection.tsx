@@ -1,12 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronLeft, Grid3X3, List, ArrowUpDown, Plus } from "lucide-react";
+import { ChevronLeft, Grid3X3, LayoutGrid, List, Plus } from "lucide-react";
 import type { Driver, Card, ViewMode } from "@/lib/types";
 import { useState } from "react";
 import BinderView from "@/components/BinderView";
 import ListView from "@/components/ListView";
-import SortView from "@/components/SortView";
+import ScrollView from "@/components/ScrollView";
 import AddCardDialog from "@/components/AddCardDialog";
 
 export default function CardCollection() {
