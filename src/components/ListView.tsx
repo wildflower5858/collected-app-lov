@@ -27,9 +27,10 @@ export default function ListView({ cards }: Props) {
         <button
           key={card.id}
           onClick={() => navigate(`/card/${card.id}`)}
-          className="flex items-center gap-4 py-2.5 px-2 -mx-2 rounded-md hover:bg-card transition-colors text-left"
+          className="flex items-center gap-4 py-3.5 px-4 hover:bg-card transition-colors text-left w-full border-b"
+          style={{ borderBottomWidth: "0.5px" }}
         >
-          <div className="w-[32px] h-[45px] rounded overflow-hidden shrink-0 bg-secondary relative">
+          <div className="w-[56px] h-[78px] rounded-md overflow-hidden shrink-0 bg-secondary relative">
             {card.image_front_url ? (
               <img
                 src={card.image_front_url}
@@ -39,7 +40,7 @@ export default function ListView({ cards }: Props) {
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <span className="text-[7px] text-muted-foreground">–</span>
+                <span className="text-[9px] text-muted-foreground">–</span>
               </div>
             )}
             {card.status === "purchased" && (
@@ -47,14 +48,14 @@ export default function ListView({ cards }: Props) {
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-[13px] font-medium text-foreground truncate">
+            <div className="text-[14px] font-medium text-foreground truncate">
               {card.card_name || card.card_number || "Untitled"}
             </div>
             <div className="text-[12px] text-muted-foreground truncate">
               {card.set_name} · {card.card_number}
             </div>
           </div>
-          <ParallelBadge parallel={card.parallel} />
+          <ParallelBadge parallel={card.parallel} size="lg" />
         </button>
       ))}
     </div>

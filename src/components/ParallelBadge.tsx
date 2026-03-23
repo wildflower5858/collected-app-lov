@@ -7,11 +7,12 @@ const parallelColors: Record<string, string> = {
   Sapphire: "hsl(270 40% 60%)",
 };
 
-export default function ParallelBadge({ parallel }: { parallel: string }) {
+export default function ParallelBadge({ parallel, size = "sm" }: { parallel: string; size?: "sm" | "lg" }) {
   const color = parallelColors[parallel] ?? "hsl(220 5% 52%)";
+  const isLg = size === "lg";
   return (
     <span
-      className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-medium"
+      className={`shrink-0 rounded-full font-medium ${isLg ? "text-[12px] px-2.5 py-[3px]" : "text-[10px] px-2 py-0.5"}`}
       style={{
         backgroundColor: color + "18",
         color,
