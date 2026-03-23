@@ -21,7 +21,7 @@ export default function ListView({ cards }: Props) {
   }
 
   return (
-    <div className="flex flex-col max-w-[720px]">
+    <div className="flex flex-col w-full">
       <SortBar sortBy={sortBy} sortDir={sortDir} onToggle={toggle} />
       {sorted.map((card) => (
         <button
