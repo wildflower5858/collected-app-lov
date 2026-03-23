@@ -43,8 +43,8 @@ export default function CardCollection() {
 
   const viewButtons: { mode: ViewMode; icon: typeof Grid3X3; label: string }[] = [
     { mode: "binder", icon: Grid3X3, label: "Binder" },
+    { mode: "scroll", icon: LayoutGrid, label: "Scroll" },
     { mode: "list", icon: List, label: "List" },
-    { mode: "sort", icon: ArrowUpDown, label: "Sort" },
   ];
 
   return (
