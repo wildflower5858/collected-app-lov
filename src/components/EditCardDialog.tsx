@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Card, Driver, ReferenceItem } from "@/lib/types";
@@ -17,6 +17,56 @@ interface Props {
   onSaved: () => void;
 }
 
+function ImageUploadZone({
+  label,
+  currentUrl,
+  onFileSelected,
+}: {
+  label: string;
+  currentUrl: string | null;
+  onFileSelected: (file: File) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [preview, setPreview] = useState<string | null>(currentUrl);
+
+  useEffect(() => {
+    setPreview(currentUrl);
+  }, [currentUrl]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPreview(URL.createObjectURL(file));
+    onFileSelected(file);
+  };
+
+  return (
+    <div>
+      <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
+        {label}
+      </label>
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        className="w-full aspect-[2.5/3.5] rounded-lg border-2 border-dashed border-border hover:border-foreground/30 transition-colors flex items-center justify-center overflow-hidden bg-background"
+      >
+        {preview ? (
+          <img src={preview} alt={label} className="w-full h-full object-cover rounded-md" />
+        ) : (
+          <span className="text-[12px] text-muted-foreground">Click to upload</span>
+        )}
+      </button>
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleChange}
+        className="hidden"
+      />
+    </div>
+  );
+}
+
 export default function EditCardDialog({ open, onClose, card, driver, onSaved }: Props) {
   const [year, setYear] = useState(card.year);
   const [setName, setSetName] = useState(card.set_name);
@@ -25,13 +75,11 @@ export default function EditCardDialog({ open, onClose, card, driver, onSaved }:
   const [parallel, setParallel] = useState(card.parallel);
   const [cardType, setCardType] = useState(card.card_type);
   const [status, setStatus] = useState(card.status);
-  const [copyNumber, setCopyNumber] = useState(card.copy_number ?? "");
-  const [printRun, setPrintRun] = useState(card.print_run ?? "");
-  const [isLandscape, setIsLandscape] = useState(card.is_landscape);
-  const [isGraded, setIsGraded] = useState(card.is_graded);
-  const [gradingCompany, setGradingCompany] = useState(card.grading_company ?? "");
-  const [grade, setGrade] = useState(card.grade ?? "");
-  const [certNumber, setCertNumber] = useState(card.cert_number ?? "");
+  const [stampedNumber, setStampedNumber] = useState(() => {
+    if (card.copy_number && card.print_run) return `${card.copy_number}/${card.print_run}`;
+    if (card.copy_number) return card.copy_number;
+    return "";
+  });
   const [notes, setNotes] = useState(card.notes ?? "");
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -60,6 +108,13 @@ export default function EditCardDialog({ open, onClose, card, driver, onSaved }:
     },
   });
 
+  // Filter out "Graded" from card types
+  const filteredCardTypes = (cardTypes ?? []).filter(
+    (ct) => ct.name.toLowerCase() !== "graded"
+  );
+
+  const parallelHasNumber = parallel.includes("/");
+
   const handleImageUpload = async (side: "front" | "back", file: File) => {
     setUploading(true);
     const ext = file.name.split(".").pop();
@@ -75,6 +130,14 @@ export default function EditCardDialog({ open, onClose, card, driver, onSaved }:
 
   const handleSave = async () => {
     setSaving(true);
+    let copyNumber: string | null = null;
+    let printRun: string | null = null;
+    if (parallelHasNumber && stampedNumber) {
+      const parts = stampedNumber.split("/");
+      copyNumber = parts[0]?.trim() || null;
+      printRun = parts[1]?.trim() || null;
+    }
+
     await supabase.from("cards").update({
       year,
       set_name: setName,
@@ -83,13 +146,8 @@ export default function EditCardDialog({ open, onClose, card, driver, onSaved }:
       parallel,
       card_type: cardType,
       status,
-      copy_number: copyNumber || null,
-      print_run: printRun || null,
-      is_landscape: isLandscape,
-      is_graded: isGraded,
-      grading_company: isGraded ? gradingCompany || null : null,
-      grade: isGraded ? grade || null : null,
-      cert_number: isGraded ? certNumber || null : null,
+      copy_number: copyNumber,
+      print_run: printRun,
       notes: notes || null,
     }).eq("id", card.id);
     setSaving(false);
@@ -97,124 +155,162 @@ export default function EditCardDialog({ open, onClose, card, driver, onSaved }:
     onClose();
   };
 
-  const inputClass = "w-full px-3 py-2 rounded-md border border-border bg-background text-body focus:outline-none focus:ring-1 focus:ring-foreground/20";
+  const inputClass =
+    "w-full px-3 py-2 rounded-md border border-border bg-background text-[13px] focus:outline-none focus:ring-1 focus:ring-foreground/20";
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="sm:max-w-[520px] bg-card max-h-[85vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-section-title">Edit Card</DialogTitle>
-        </DialogHeader>
-        <div className="flex flex-col gap-3">
-          {/* Image uploads */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-label mb-1 block">Front Image</label>
-              <input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleImageUpload("front", e.target.files[0])}
-                className="text-[11px] text-muted-foreground" />
-            </div>
-            <div>
-              <label className="text-label mb-1 block">Back Image</label>
-              <input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleImageUpload("back", e.target.files[0])}
-                className="text-[11px] text-muted-foreground" />
-            </div>
-          </div>
-          {uploading && <div className="text-[11px] text-muted-foreground">Uploading...</div>}
+      <DialogContent className="sm:max-w-[520px] bg-card max-h-[85vh] overflow-y-auto p-0">
+        <div className="p-6">
+          <DialogHeader>
+            <DialogTitle className="text-[15px] font-medium">Edit card</DialogTitle>
+          </DialogHeader>
 
-          <div>
-            <label className="text-label mb-1 block">Set</label>
-            <select value={setName} onChange={(e) => setSetName(e.target.value)} className={inputClass}>
-              {(sets ?? []).map((s) => <option key={s.id} value={s.name}>{s.name}</option>)}
-            </select>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-label mb-1 block">Card Name</label>
-              <input value={cardName} onChange={(e) => setCardName(e.target.value)} className={inputClass} />
+          <div className="flex flex-col gap-4 mt-5">
+            {/* Image uploads */}
+            <div className="grid grid-cols-2 gap-4">
+              <ImageUploadZone
+                label="Front image"
+                currentUrl={card.image_front_url}
+                onFileSelected={(f) => handleImageUpload("front", f)}
+              />
+              <ImageUploadZone
+                label="Back image"
+                currentUrl={card.image_back_url}
+                onFileSelected={(f) => handleImageUpload("back", f)}
+              />
             </div>
-            <div>
-              <label className="text-label mb-1 block">Card Number</label>
-              <input value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} className={inputClass} />
+            {uploading && (
+              <div className="text-[11px] text-muted-foreground">Uploading…</div>
+            )}
+
+            {/* Set + Year */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
+                  Set
+                </label>
+                <select value={setName} onChange={(e) => setSetName(e.target.value)} className={inputClass}>
+                  {(sets ?? []).map((s) => (
+                    <option key={s.id} value={s.name}>{s.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
+                  Year
+                </label>
+                <input
+                  type="number"
+                  value={year}
+                  onChange={(e) => setYear(Number(e.target.value))}
+                  className={inputClass}
+                />
+              </div>
             </div>
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            <div>
-              <label className="text-label mb-1 block">Year</label>
-              <input type="number" value={year} onChange={(e) => setYear(Number(e.target.value))} className={inputClass} />
+
+            {/* Card name + Card number */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
+                  Card name
+                </label>
+                <input value={cardName} onChange={(e) => setCardName(e.target.value)} className={inputClass} />
+              </div>
+              <div>
+                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
+                  Card number
+                </label>
+                <input value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} className={inputClass} />
+              </div>
             </div>
-            <div>
-              <label className="text-label mb-1 block">Parallel</label>
-              <select value={parallel} onChange={(e) => setParallel(e.target.value)} className={inputClass}>
-                {(parallels ?? []).map((p) => <option key={p.id} value={p.name}>{p.name}</option>)}
-              </select>
+
+            {/* Parallel + Card type */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
+                  Parallel
+                </label>
+                <select value={parallel} onChange={(e) => setParallel(e.target.value)} className={inputClass}>
+                  {(parallels ?? []).map((p) => (
+                    <option key={p.id} value={p.name}>{p.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
+                  Card type
+                </label>
+                <select value={cardType} onChange={(e) => setCardType(e.target.value)} className={inputClass}>
+                  {filteredCardTypes.map((ct) => (
+                    <option key={ct.id} value={ct.name}>{ct.name}</option>
+                  ))}
+                </select>
+              </div>
             </div>
+
+            {/* Stamped number (conditional) */}
+            {parallelHasNumber && (
+              <div>
+                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
+                  Stamped number
+                </label>
+                <input
+                  value={stampedNumber}
+                  onChange={(e) => setStampedNumber(e.target.value)}
+                  placeholder="e.g. 14/50"
+                  className={inputClass + " max-w-[160px]"}
+                />
+              </div>
+            )}
+
+            {/* Status */}
             <div>
-              <label className="text-label mb-1 block">Card Type</label>
-              <select value={cardType} onChange={(e) => setCardType(e.target.value)} className={inputClass}>
-                {(cardTypes ?? []).map((ct) => <option key={ct.id} value={ct.name}>{ct.name}</option>)}
-              </select>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            <div>
-              <label className="text-label mb-1 block">Status</label>
+              <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
+                Status
+              </label>
               <select value={status} onChange={(e) => setStatus(e.target.value)} className={inputClass}>
                 <option value="owned">Owned</option>
                 <option value="purchased">Purchased</option>
                 <option value="wishlist">Wishlist</option>
               </select>
             </div>
+
+            {/* Notes */}
             <div>
-              <label className="text-label mb-1 block">Copy #</label>
-              <input value={copyNumber} onChange={(e) => setCopyNumber(e.target.value)} className={inputClass} />
+              <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
+                Notes
+              </label>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                className={inputClass + " resize-none"}
+                rows={2}
+              />
             </div>
-            <div>
-              <label className="text-label mb-1 block">Print Run</label>
-              <input value={printRun} onChange={(e) => setPrintRun(e.target.value)} className={inputClass} />
-            </div>
+
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="mt-1 px-4 py-2.5 rounded-md text-[13px] font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
+              style={{
+                backgroundColor: driver.color_hex,
+                color: isLightColor(driver.color_hex) ? "#1a1a1a" : "#ffffff",
+              }}
+            >
+              {saving ? "Saving…" : "Save changes"}
+            </button>
           </div>
-
-          <div className="flex items-center gap-2">
-            <input type="checkbox" checked={isLandscape} onChange={(e) => setIsLandscape(e.target.checked)} className="rounded border-border" id="edit-landscape" />
-            <label htmlFor="edit-landscape" className="text-body text-foreground">Landscape orientation</label>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <input type="checkbox" checked={isGraded} onChange={(e) => setIsGraded(e.target.checked)} className="rounded border-border" id="edit-graded" />
-            <label htmlFor="edit-graded" className="text-body text-foreground">Graded card</label>
-          </div>
-
-          {isGraded && (
-            <div className="grid grid-cols-3 gap-3">
-              <div>
-                <label className="text-label mb-1 block">Company</label>
-                <input value={gradingCompany} onChange={(e) => setGradingCompany(e.target.value)} className={inputClass} placeholder="PSA" />
-              </div>
-              <div>
-                <label className="text-label mb-1 block">Grade</label>
-                <input value={grade} onChange={(e) => setGrade(e.target.value)} className={inputClass} placeholder="10" />
-              </div>
-              <div>
-                <label className="text-label mb-1 block">Cert #</label>
-                <input value={certNumber} onChange={(e) => setCertNumber(e.target.value)} className={inputClass} />
-              </div>
-            </div>
-          )}
-
-          <div>
-            <label className="text-label mb-1 block">Notes</label>
-            <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className={inputClass + " resize-none"} rows={2} />
-          </div>
-
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="mt-2 px-4 py-2 rounded-md bg-foreground text-background text-body font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
-          >
-            {saving ? "Saving..." : "Save Changes"}
-          </button>
         </div>
       </DialogContent>
     </Dialog>
   );
+}
+
+function isLightColor(hex: string): boolean {
+  const c = hex.replace("#", "");
+  const r = parseInt(c.substring(0, 2), 16);
+  const g = parseInt(c.substring(2, 4), 16);
+  const b = parseInt(c.substring(4, 6), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 > 160;
 }
