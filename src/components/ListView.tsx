@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import type { Card, Driver } from "@/lib/types";
 import ParallelBadge from "@/components/ParallelBadge";
+import SortBar, { useSortedCards } from "@/components/SortBar";
 
 interface Props {
   cards: Card[];
@@ -9,6 +10,7 @@ interface Props {
 
 export default function ListView({ cards }: Props) {
   const navigate = useNavigate();
+  const { sorted, sortBy, sortDir, toggle } = useSortedCards(cards);
 
   if (cards.length === 0) {
     return (
@@ -20,20 +22,19 @@ export default function ListView({ cards }: Props) {
 
   return (
     <div className="flex flex-col max-w-[720px]">
-      {cards.map((card) => (
+      <SortBar sortBy={sortBy} sortDir={sortDir} onToggle={toggle} />
+      {sorted.map((card) => (
         <button
           key={card.id}
           onClick={() => navigate(`/card/${card.id}`)}
           className="flex items-center gap-4 py-2.5 px-2 -mx-2 rounded-md hover:bg-card transition-colors text-left"
         >
-          {/* Thumbnail */}
           <div className="w-[32px] h-[45px] rounded overflow-hidden shrink-0 bg-secondary relative">
             {card.image_front_url ? (
               <img
                 src={card.image_front_url}
                 alt=""
                 className={`w-full h-full object-cover
-                  ${card.is_landscape ? "rotate-90 scale-[1.4]" : ""}
                   ${card.status === "wishlist" ? "grayscale opacity-50" : ""}`}
               />
             ) : (
@@ -45,7 +46,6 @@ export default function ListView({ cards }: Props) {
               <div className="absolute inset-0" style={{ backgroundColor: "rgba(180,0,0,0.45)" }} />
             )}
           </div>
-          {/* Info */}
           <div className="flex-1 min-w-0">
             <div className="text-[13px] font-medium text-foreground truncate">
               {card.card_name || card.card_number || "Untitled"}

@@ -43,4 +43,4 @@ export interface ReferenceItem {
 
 export type CollectionType = 'f1' | 'kpop' | 'pokemon';
 export type CardStatus = 'owned' | 'purchased' | 'wishlist';
-export type ViewMode = 'binder' | 'list' | 'sort';
+export type ViewMode = 'binder' | 'scroll' | 'list';

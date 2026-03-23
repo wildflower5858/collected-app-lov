@@ -98,8 +98,8 @@ export default function CardCollection() {
       </header>
       <main className="px-12 py-8">
         {viewMode === "binder" && <BinderView cards={cards ?? []} driver={driver} />}
+        {viewMode === "scroll" && <ScrollView cards={cards ?? []} driver={driver} />}
         {viewMode === "list" && <ListView cards={cards ?? []} driver={driver} />}
-        {viewMode === "sort" && <SortView cards={cards ?? []} driver={driver} />}
       </main>
       <AddCardDialog
         open={showAddCard}
