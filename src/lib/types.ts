@@ -1,7 +1,8 @@
-export interface Driver {
+export interface Person {
   id: string;
   name: string;
   collection_type: string;
+  group_id: string | null;
   team: string | null;
   color_hex: string;
   avatar_type: string;
@@ -13,7 +14,7 @@ export interface Driver {
 
 export interface Card {
   id: string;
-  driver_id: string;
+  person_id: string;
   year: number;
   set_name: string;
   card_number: string | null;
@@ -41,6 +42,13 @@ export interface ReferenceItem {
   name: string;
 }
 
+export interface Group {
+  id: string;
+  name: string;
+  collection_type: string;
+  sort_order: number;
+}
+
 export type CollectionType = 'f1' | 'kpop' | 'pokemon';
 export type CardStatus = 'owned' | 'purchased' | 'wishlist';
-export type ViewMode = 'binder' | 'scroll' | 'list';
+export type ViewMode = 'binder' | 'scroll';
