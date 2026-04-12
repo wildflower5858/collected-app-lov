@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,43 +6,33 @@
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
+    --background: 45 33% 92%;
     --foreground: 220 15% 15%;
-
-    --card: 0 0% 100%;
+    --card: 45 30% 96%;
     --card-foreground: 220 15% 15%;
-
-    --popover: 0 0% 100%;
+    --popover: 45 30% 96%;
     --popover-foreground: 220 15% 15%;
-
     --primary: 220 15% 15%;
-    --primary-foreground: 50 33% 97%;
-
-    --secondary: 40 10% 94%;
+    --primary-foreground: 45 33% 92%;
+    --secondary: 40 20% 88%;
     --secondary-foreground: 220 15% 15%;
-
-    --muted: 40 10% 94%;
-    --muted-foreground: 220 5% 52%;
-
-    --accent: 40 10% 94%;
+    --muted: 40 20% 88%;
+    --muted-foreground: 220 5% 45%;
+    --accent: 40 20% 88%;
     --accent-foreground: 220 15% 15%;
-
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-
-    --border: 220 10% 90%;
-    --input: 220 10% 90%;
+    --border: 40 15% 82%;
+    --input: 40 15% 82%;
     --ring: 220 15% 15%;
-
     --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 45 30% 89%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-primary-foreground: 45 33% 92%;
+    --sidebar-accent: 40 20% 85%;
     --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
+    --sidebar-border: 40 15% 80%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
@@ -51,19 +41,24 @@
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', sans-serif;
+    font-family: 'DM Sans', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
   }
 }
 
 @layer utilities {
   .text-page-title {
     @apply text-[26px] font-medium leading-tight;
+    font-family: 'Quicksand', sans-serif;
   }
   .text-section-title {
     @apply text-[15px] font-medium leading-snug;
+    font-family: 'Quicksand', sans-serif;
   }
   .text-body {
     @apply text-[13px] font-normal leading-relaxed;
@@ -73,5 +68,6 @@
   }
   .text-card-name {
     @apply text-[20px] font-medium leading-snug;
+    font-family: 'Quicksand', sans-serif;
   }
 }
