@@ -1,58 +1,39 @@
-import type { Driver } from "@/lib/types";
+import type { Person } from "@/lib/types";
 
 interface Props {
-  driver: Driver;
+  person: Person;
   size?: number;
 }
 
-export default function DriverAvatar({ driver, size = 36 }: Props) {
-  const initials = driver.name
-    .split(" ")
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-
-  if (driver.avatar_type === "photo" && driver.avatar_value) {
+export default function DriverAvatar({ person, size = 36 }: Props) {
+  if (person.avatar_type === "image" && person.avatar_value) {
     return (
       <img
-        src={driver.avatar_value}
-        alt={driver.name}
-        className="rounded-full object-cover shrink-0"
-        style={{ width: size, height: size }}
+        src={person.avatar_value}
+        alt={person.name}
+        style={{ width: size, height: size, borderRadius: "50%", objectFit: "cover" }}
       />
     );
   }
 
-  if (driver.avatar_type === "emoji" && driver.avatar_value) {
-    return (
-      <div
-        className="rounded-full flex items-center justify-center shrink-0"
-        style={{
-          width: size,
-          height: size,
-          backgroundColor: driver.color_hex + "18",
-        }}
-      >
-        <span style={{ fontSize: size * 0.5 }}>{driver.avatar_value}</span>
-      </div>
-    );
-  }
-
-  // Initials fallback
   return (
     <div
-      className="rounded-full flex items-center justify-center shrink-0"
       style={{
         width: size,
         height: size,
-        backgroundColor: driver.color_hex + "18",
-        color: driver.color_hex,
+        borderRadius: "50%",
+        backgroundColor: person.color_hex + "22",
+        border: `1.5px solid ${person.color_hex}`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: size * 0.38,
+        fontWeight: 600,
+        color: person.color_hex,
+        flexShrink: 0,
       }}
     >
-      <span className="font-medium" style={{ fontSize: size * 0.35 }}>
-        {initials}
-      </span>
+      {person.name.charAt(0)}
     </div>
   );
 }
