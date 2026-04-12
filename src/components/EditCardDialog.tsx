@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Card, Driver, ReferenceItem } from "@/lib/types";
+import type { Card, Person, ReferenceItem } from "@/lib/types";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,7 @@ interface Props {
   open: boolean;
   onClose: () => void;
   card: Card;
-  driver: Driver;
+  person: Person;
   onSaved: () => void;
 }
 
@@ -67,7 +67,7 @@ function ImageUploadZone({
   );
 }
 
-export default function EditCardDialog({ open, onClose, card, driver, onSaved }: Props) {
+export default function EditCardDialog({ open, onClose, card, person, onSaved }: Props) {
   const [year, setYear] = useState(card.year);
   const [setName, setSetName] = useState(card.set_name);
   const [cardNumber, setCardNumber] = useState(card.card_number ?? "");
@@ -108,7 +108,6 @@ export default function EditCardDialog({ open, onClose, card, driver, onSaved }:
     },
   });
 
-  // Filter out "Graded" from card types
   const filteredCardTypes = (cardTypes ?? []).filter(
     (ct) => ct.name.toLowerCase() !== "graded"
   );
@@ -137,7 +136,6 @@ export default function EditCardDialog({ open, onClose, card, driver, onSaved }:
       copyNumber = parts[0]?.trim() || null;
       printRun = parts[1]?.trim() || null;
     }
-
     await supabase.from("cards").update({
       year,
       set_name: setName,
@@ -167,7 +165,6 @@ export default function EditCardDialog({ open, onClose, card, driver, onSaved }:
           </DialogHeader>
 
           <div className="flex flex-col gap-4 mt-5">
-            {/* Image uploads */}
             <div className="grid grid-cols-2 gap-4">
               <ImageUploadZone
                 label="Front image"
@@ -184,12 +181,9 @@ export default function EditCardDialog({ open, onClose, card, driver, onSaved }:
               <div className="text-[11px] text-muted-foreground">Uploading…</div>
             )}
 
-            {/* Set + Year */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
-                  Set
-                </label>
+                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">Set</label>
                 <select value={setName} onChange={(e) => setSetName(e.target.value)} className={inputClass}>
                   {(sets ?? []).map((s) => (
                     <option key={s.id} value={s.name}>{s.name}</option>
@@ -197,40 +191,25 @@ export default function EditCardDialog({ open, onClose, card, driver, onSaved }:
                 </select>
               </div>
               <div>
-                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
-                  Year
-                </label>
-                <input
-                  type="number"
-                  value={year}
-                  onChange={(e) => setYear(Number(e.target.value))}
-                  className={inputClass}
-                />
+                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">Year</label>
+                <input type="number" value={year} onChange={(e) => setYear(Number(e.target.value))} className={inputClass} />
               </div>
             </div>
 
-            {/* Card name + Card number */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
-                  Card name
-                </label>
+                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">Card name</label>
                 <input value={cardName} onChange={(e) => setCardName(e.target.value)} className={inputClass} />
               </div>
               <div>
-                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
-                  Card number
-                </label>
+                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">Card number</label>
                 <input value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} className={inputClass} />
               </div>
             </div>
 
-            {/* Parallel + Card type */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
-                  Parallel
-                </label>
+                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">Parallel</label>
                 <select value={parallel} onChange={(e) => setParallel(e.target.value)} className={inputClass}>
                   {(parallels ?? []).map((p) => (
                     <option key={p.id} value={p.name}>{p.name}</option>
@@ -238,9 +217,7 @@ export default function EditCardDialog({ open, onClose, card, driver, onSaved }:
                 </select>
               </div>
               <div>
-                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
-                  Card type
-                </label>
+                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">Card type</label>
                 <select value={cardType} onChange={(e) => setCardType(e.target.value)} className={inputClass}>
                   {filteredCardTypes.map((ct) => (
                     <option key={ct.id} value={ct.name}>{ct.name}</option>
@@ -249,12 +226,9 @@ export default function EditCardDialog({ open, onClose, card, driver, onSaved }:
               </div>
             </div>
 
-            {/* Stamped number (conditional) */}
             {parallelHasNumber && (
               <div>
-                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
-                  Stamped number
-                </label>
+                <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">Stamped number</label>
                 <input
                   value={stampedNumber}
                   onChange={(e) => setStampedNumber(e.target.value)}
@@ -264,11 +238,8 @@ export default function EditCardDialog({ open, onClose, card, driver, onSaved }:
               </div>
             )}
 
-            {/* Status */}
             <div>
-              <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
-                Status
-              </label>
+              <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">Status</label>
               <select value={status} onChange={(e) => setStatus(e.target.value)} className={inputClass}>
                 <option value="owned">Owned</option>
                 <option value="purchased">Purchased</option>
@@ -276,11 +247,8 @@ export default function EditCardDialog({ open, onClose, card, driver, onSaved }:
               </select>
             </div>
 
-            {/* Notes */}
             <div>
-              <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">
-                Notes
-              </label>
+              <label className="text-[11px] font-medium tracking-wide uppercase text-muted-foreground mb-1.5 block">Notes</label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
@@ -294,8 +262,8 @@ export default function EditCardDialog({ open, onClose, card, driver, onSaved }:
               disabled={saving}
               className="mt-1 px-4 py-2.5 rounded-md text-[13px] font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
               style={{
-                backgroundColor: driver.color_hex,
-                color: isLightColor(driver.color_hex) ? "#1a1a1a" : "#ffffff",
+                backgroundColor: person.color_hex,
+                color: isLightColor(person.color_hex) ? "#1a1a1a" : "#ffffff",
               }}
             >
               {saving ? "Saving…" : "Save changes"}
