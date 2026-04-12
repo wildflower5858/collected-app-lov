@@ -23,7 +23,7 @@ export default function AddDriverDialog({ open, onClose, collectionType, onAdded
   const handleSave = async () => {
     if (!name.trim()) return;
     setSaving(true);
-    await supabase.from("drivers").insert({
+    await supabase.from("persons").insert({
       name: name.trim(),
       team: team.trim() || null,
       collection_type: collectionType,
@@ -38,11 +38,13 @@ export default function AddDriverDialog({ open, onClose, collectionType, onAdded
     onClose();
   };
 
+  const inputClass = "w-full px-3 py-2 rounded-md border border-border bg-background text-body focus:outline-none focus:ring-1 focus:ring-foreground/20";
+
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="sm:max-w-[400px] bg-card">
         <DialogHeader>
-          <DialogTitle className="text-section-title">Add Driver</DialogTitle>
+          <DialogTitle className="text-section-title">Add to Shelf</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-4 pt-2">
           <div>
@@ -50,8 +52,8 @@ export default function AddDriverDialog({ open, onClose, collectionType, onAdded
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 rounded-md border border-border bg-background text-body focus:outline-none focus:ring-1 focus:ring-foreground/20"
-              placeholder="e.g. Lewis Hamilton"
+              className={inputClass}
+              placeholder="e.g. Lando Norris"
             />
           </div>
           <div>
@@ -59,8 +61,8 @@ export default function AddDriverDialog({ open, onClose, collectionType, onAdded
             <input
               value={team}
               onChange={(e) => setTeam(e.target.value)}
-              className="w-full px-3 py-2 rounded-md border border-border bg-background text-body focus:outline-none focus:ring-1 focus:ring-foreground/20"
-              placeholder="e.g. Mercedes"
+              className={inputClass}
+              placeholder="e.g. McLaren"
             />
           </div>
           <div>
@@ -80,7 +82,7 @@ export default function AddDriverDialog({ open, onClose, collectionType, onAdded
             disabled={saving || !name.trim()}
             className="mt-2 px-4 py-2 rounded-md bg-foreground text-background text-body font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
           >
-            {saving ? "Saving..." : "Add Driver"}
+            {saving ? "Saving..." : "Add"}
           </button>
         </div>
       </DialogContent>
