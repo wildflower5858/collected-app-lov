@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Driver, ReferenceItem } from "@/lib/types";
+import type { Person, ReferenceItem } from "@/lib/types";
 import {
   Dialog,
   DialogContent,
@@ -12,11 +12,11 @@ import {
 interface Props {
   open: boolean;
   onClose: () => void;
-  driver: Driver;
+  person: Person;
   onAdded: () => void;
 }
 
-export default function AddCardDialog({ open, onClose, driver, onAdded }: Props) {
+export default function AddCardDialog({ open, onClose, person, onAdded }: Props) {
   const [mode, setMode] = useState<"quick" | "complete">("quick");
   const [year, setYear] = useState(new Date().getFullYear());
   const [setName, setSetName] = useState("");
@@ -59,7 +59,7 @@ export default function AddCardDialog({ open, onClose, driver, onAdded }: Props)
     if (!setName) return;
     setSaving(true);
     await supabase.from("cards").insert({
-      driver_id: driver.id,
+      person_id: person.id,
       year,
       set_name: setName,
       card_number: cardNumber || null,
@@ -71,11 +71,10 @@ export default function AddCardDialog({ open, onClose, driver, onAdded }: Props)
       print_run: printRun || null,
       is_landscape: isLandscape,
       notes: notes || null,
-      team: driver.team,
+      team: person.team,
       sort_order: 999,
     });
     setSaving(false);
-    // Reset
     setCardNumber("");
     setCardName("");
     setCopyNumber("");
@@ -93,10 +92,9 @@ export default function AddCardDialog({ open, onClose, driver, onAdded }: Props)
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="sm:max-w-[480px] bg-card max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-section-title">Add Card — {driver.name}</DialogTitle>
+          <DialogTitle className="text-section-title">Add Card — {person.name}</DialogTitle>
         </DialogHeader>
 
-        {/* Mode toggle */}
         <div className="flex gap-2 mb-2">
           <button
             onClick={() => setMode("quick")}
