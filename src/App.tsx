@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "./pages/Home";
-import DriverList from "./pages/DriverList";
+import ShelfPage from "./pages/ShelfPage";
 import CardCollection from "./pages/CardCollection";
 import CardDetail from "./pages/CardDetail";
 import Settings from "./pages/Settings";
@@ -20,8 +20,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/collection/:collectionType" element={<DriverList />} />
-          <Route path="/driver/:driverId" element={<CardCollection />} />
+          <Route path="/collection/:collectionType" element={<ShelfPage />} />
+          <Route path="/person/:personId" element={<CardCollection />} />
           <Route path="/card/:cardId" element={<CardDetail />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />
