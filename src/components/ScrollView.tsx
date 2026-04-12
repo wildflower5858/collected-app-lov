@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import type { Card, Driver } from "@/lib/types";
+import type { Card, Person } from "@/lib/types";
 import ParallelBadge from "@/components/ParallelBadge";
 import SortBar, { useSortedCards } from "@/components/SortBar";
 
 interface Props {
   cards: Card[];
-  driver: Driver;
+  person: Person;
 }
 
 export default function ScrollView({ cards }: Props) {
@@ -30,7 +30,6 @@ export default function ScrollView({ cards }: Props) {
             onClick={() => navigate(`/card/${card.id}`)}
             className="text-left cursor-pointer group"
           >
-            {/* Card image */}
             <div className="relative rounded-lg overflow-hidden bg-secondary" style={{ aspectRatio: "2.5 / 3.5" }}>
               {card.image_front_url ? (
                 <img
@@ -58,8 +57,6 @@ export default function ScrollView({ cards }: Props) {
                 </div>
               )}
             </div>
-
-            {/* Info block */}
             <div className="h-16 pt-2 flex flex-col overflow-hidden">
               <p className="text-[13px] font-medium text-foreground leading-tight line-clamp-2">
                 {card.card_name || card.card_number || "Untitled"}
