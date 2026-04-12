@@ -1,48 +1,63 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
-import type { Driver } from "@/lib/types";
-import DriverAvatar from "@/components/DriverAvatar";
+import { ChevronLeft, Plus } from "lucide-react";
+import type { Person } from "@/lib/types";
 import AddDriverDialog from "@/components/AddDriverDialog";
 import { useState } from "react";
 
-export default function DriverList() {
+function getBinderImage(collectionType: string, name: string): string {
+  const slug = name.toLowerCase().replace(/\s+/g, "-");
+  return `/binders/${collectionType}/${slug}.svg`;
+}
+
+export default function ShelfPage() {
   const { collectionType } = useParams<{ collectionType: string }>();
   const navigate = useNavigate();
-  const [showAddDriver, setShowAddDriver] = useState(false);
+  const [showAddPerson, setShowAddPerson] = useState(false);
 
-  const { data: drivers, refetch } = useQuery({
-    queryKey: ["drivers", collectionType],
+  const { data: persons, refetch } = useQuery({
+    queryKey: ["persons", collectionType],
     queryFn: async () => {
-      const { data: driversData } = await supabase
-        .from("drivers")
+      const { data: personsData } = await supabase
+        .from("persons")
         .select("*")
         .eq("collection_type", collectionType ?? "f1")
         .order("sort_order");
-
-      // Get card counts per driver
       const { data: cards } = await supabase
         .from("cards")
-        .select("driver_id");
-
+        .select("person_id");
       const countMap: Record<string, number> = {};
       (cards ?? []).forEach((c) => {
-        countMap[c.driver_id] = (countMap[c.driver_id] || 0) + 1;
+        countMap[c.person_id] = (countMap[c.person_id] || 0) + 1;
       });
-
-      return (driversData ?? []).map((d) => ({
+      return (personsData ?? []).map((d) => ({
         ...d,
         card_count: countMap[d.id] || 0,
-      })) as Driver[];
+      })) as Person[];
     },
   });
 
-  const collectionName = collectionType === "f1" ? "Formula 1" : collectionType ?? "";
+  const collectionName = collectionType === "f1" ? "Formula 1"
+    : collectionType === "kpop" ? "K-Pop"
+    : collectionType === "pokemon" ? "Pokémon"
+    : collectionType ?? "";
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="px-12 py-8">
+      <header className="flex items-center justify-between px-12 py-5 border-b border-border">
+        <img src="/logo.svg" alt="collected" className="h-7" />
+        <div className="flex-1 mx-8">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="w-full max-w-md bg-secondary rounded-md px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground border border-border focus:outline-none focus:border-foreground/30"
+          />
+        </div>
+        <div className="w-[34px]" />
+      </header>
+
+      <div className="px-12 py-6">
         <button
           onClick={() => navigate("/")}
           className="flex items-center gap-1 text-body text-muted-foreground hover:text-foreground transition-colors mb-4"
@@ -50,47 +65,47 @@ export default function DriverList() {
           <ChevronLeft size={14} />
           Collections
         </button>
-        <div className="flex items-center justify-between">
-          <h1 className="text-page-title text-foreground">{collectionName}</h1>
+
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-page-title text-foreground">Shelf</h1>
           <button
-            onClick={() => setShowAddDriver(true)}
+            onClick={() => setShowAddPerson(true)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-body text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
           >
             <Plus size={14} />
-            Add Driver
+            Add
           </button>
         </div>
-      </header>
-      <main className="px-12 max-w-[720px]">
-        <div className="flex flex-col">
-          {(drivers ?? []).map((driver, i) => (
+
+        <div className="grid grid-cols-4 gap-6">
+          {(persons ?? []).map((person) => (
             <button
-              key={driver.id}
-              onClick={() => navigate(`/driver/${driver.id}`)}
-              className="flex items-center gap-4 py-3 px-3 -mx-3 rounded-md hover:bg-card transition-colors group"
-              style={{
-                animationDelay: `${i * 60}ms`,
-              }}
+              key={person.id}
+              onClick={() => navigate(`/person/${person.id}`)}
+              className="group text-left"
             >
-              <div
-                className="w-[3px] h-10 rounded-full shrink-0"
-                style={{ backgroundColor: driver.color_hex }}
-              />
-              <DriverAvatar driver={driver} size={36} />
-              <div className="flex-1 text-left">
-                <div className="text-section-title text-foreground">{driver.name}</div>
-                <div className="text-[12px] text-muted-foreground">
-                  {driver.team} · {driver.card_count} card{driver.card_count !== 1 ? "s" : ""}
-                </div>
+              <div className="aspect-[2/3] rounded-lg overflow-hidden bg-secondary mb-3">
+                <img
+                  src={getBinderImage(collectionType ?? "f1", person.name)}
+                  alt={person.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                  }}
+                />
               </div>
-              <ChevronRight size={14} className="text-muted-foreground/50 group-hover:text-muted-foreground transition-colors" />
+              <div className="text-section-title text-foreground">{person.name}</div>
+              <div className="text-[12px] text-muted-foreground mt-0.5">
+                {person.card_count} card{person.card_count !== 1 ? "s" : ""}
+              </div>
             </button>
           ))}
         </div>
-      </main>
+      </div>
+
       <AddDriverDialog
-        open={showAddDriver}
-        onClose={() => setShowAddDriver(false)}
+        open={showAddPerson}
+        onClose={() => setShowAddPerson(false)}
         collectionType={collectionType ?? "f1"}
         onAdded={refetch}
       />
