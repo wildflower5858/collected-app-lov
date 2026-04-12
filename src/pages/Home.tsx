@@ -4,14 +4,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Settings } from "lucide-react";
 
 const collections = [
-  { type: "f1", name: "Formula 1", emoji: "🏎️" },
-  { type: "kpop", name: "K-pop", emoji: "🎤", disabled: true },
-  { type: "pokemon", name: "Pokémon", emoji: "⚡", disabled: true },
+  { type: "f1", name: "Formula 1" },
+  { type: "kpop", name: "K-Pop", disabled: true },
+  { type: "pokemon", name: "Pokémon", disabled: true },
 ];
 
 export default function Home() {
   const navigate = useNavigate();
-
   const { data: counts } = useQuery({
     queryKey: ["collection-counts"],
     queryFn: async () => {
@@ -29,8 +28,15 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="flex items-center justify-between px-12 py-8">
-        <h1 className="text-page-title text-foreground">Collections</h1>
+      <header className="flex items-center justify-between px-12 py-5 border-b border-border">
+        <img src="/logo.svg" alt="collected" className="h-7" />
+        <div className="flex-1 mx-8">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="w-full max-w-md bg-secondary rounded-md px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground border border-border focus:outline-none focus:border-foreground/30"
+          />
+        </div>
         <button
           onClick={() => navigate("/settings")}
           className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
@@ -38,7 +44,8 @@ export default function Home() {
           <Settings size={18} />
         </button>
       </header>
-      <main className="px-12">
+
+      <main className="px-12 py-10">
         <div className="grid grid-cols-3 gap-6 max-w-[720px]">
           {collections.map((col) => (
             <button
@@ -48,7 +55,7 @@ export default function Home() {
               className={`group bg-card rounded-lg border border-border p-6 text-left transition-all duration-200
                 ${col.disabled ? "opacity-40 cursor-not-allowed" : "hover:border-foreground/20 active:scale-[0.98]"}`}
             >
-              <div className="text-3xl mb-3">{col.emoji}</div>
+              <div className="h-32 bg-secondary rounded-md mb-4" />
               <div className="text-section-title text-card-foreground">{col.name}</div>
               <div className="text-body text-muted-foreground mt-1">
                 {counts?.[col.type] ?? 0} cards
