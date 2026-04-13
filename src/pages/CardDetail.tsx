@@ -23,10 +23,10 @@ export default function CardDetail() {
   });
 
   const { data: person } = useQuery({
-    queryKey: ["card-person", card?.person_id],
-    enabled: !!card?.person_id,
+    queryKey: ["card-person", card?.driver_id],
+    enabled: !!card?.driver_id,
     queryFn: async () => {
-      const { data } = await supabase.from("persons").select("*").eq("id", card!.person_id).single();
+      const { data } = await supabase.from("drivers").select("*").eq("id", card!.driver_id).single();
       return data as Person;
     },
   });

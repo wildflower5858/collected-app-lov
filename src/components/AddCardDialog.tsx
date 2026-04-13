@@ -59,7 +59,7 @@ export default function AddCardDialog({ open, onClose, person, onAdded }: Props)
     if (!setName) return;
     setSaving(true);
     await supabase.from("cards").insert({
-      person_id: person.id,
+      driver_id: person.id,
       year,
       set_name: setName,
       card_number: cardNumber || null,

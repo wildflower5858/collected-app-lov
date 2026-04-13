@@ -18,7 +18,7 @@ export default function CardCollection() {
     queryKey: ["person", personId],
     queryFn: async () => {
       const { data } = await supabase
-        .from("persons")
+        .from("drivers")
         .select("*")
         .eq("id", personId!)
         .single();
@@ -32,7 +32,7 @@ export default function CardCollection() {
       const { data } = await supabase
         .from("cards")
         .select("*")
-        .eq("person_id", personId!)
+        .eq("driver_id", personId!)
         .order("sort_order");
       return (data ?? []) as Card[];
     },

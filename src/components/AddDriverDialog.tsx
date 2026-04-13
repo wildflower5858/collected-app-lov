@@ -23,7 +23,7 @@ export default function AddDriverDialog({ open, onClose, collectionType, onAdded
   const handleSave = async () => {
     if (!name.trim()) return;
     setSaving(true);
-    await supabase.from("persons").insert({
+    await supabase.from("drivers").insert({
       name: name.trim(),
       team: team.trim() || null,
       collection_type: collectionType,

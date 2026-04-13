@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft, Grid3X3, LayoutGrid, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import type { F1Driver, F1Card } from "@/lib/types";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 
 type ViewMode = "binder" | "grid";
 
