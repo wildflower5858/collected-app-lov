@@ -51,7 +51,7 @@ export default function Home() {
             <button
               key={col.type}
               disabled={col.disabled}
-              onClick={() => navigate(`/collection/${col.type}`)}
+              onClick={() => navigate(col.type === "f1" ? "/f1/shelf" : `/collection/${col.type}`)}
               className={`group bg-card rounded-lg border border-border p-6 text-left transition-all duration-200
                 ${col.disabled ? "opacity-40 cursor-not-allowed" : "hover:border-foreground/20 active:scale-[0.98]"}`}
             >
