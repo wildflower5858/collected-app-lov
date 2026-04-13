@@ -9,6 +9,8 @@ import CardCollection from "./pages/CardCollection";
 import CardDetail from "./pages/CardDetail";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import F1Shelf from "./pages/F1Shelf";
+import F1Cards from "./pages/F1Cards";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +22,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/f1/shelf" element={<F1Shelf />} />
+          <Route path="/f1/cards/:driverId" element={<F1Cards />} />
           <Route path="/collection/:collectionType" element={<ShelfPage />} />
           <Route path="/person/:personId" element={<CardCollection />} />
           <Route path="/card/:cardId" element={<CardDetail />} />
