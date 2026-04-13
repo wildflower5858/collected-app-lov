@@ -12,9 +12,11 @@ export interface Person {
   card_count?: number;
 }
 
+export type Driver = Person;
+
 export interface Card {
   id: string;
-  person_id: string;
+  driver_id: string;
   year: number;
   set_name: string;
   card_number: string | null;
@@ -35,6 +37,38 @@ export interface Card {
   sort_order: number;
   is_landscape: boolean;
   created_at: string;
+}
+
+export interface F1Driver {
+  id: string;
+  name: string;
+  created_at: string;
+  card_count?: number;
+}
+
+export interface F1Card {
+  id: string;
+  card_name: string | null;
+  card_number: string | null;
+  driver_id: string;
+  set_id: string | null;
+  parallel_id: string | null;
+  type: string;
+  status: string;
+  copy_number: string | null;
+  print_run: string | null;
+  graded: boolean;
+  grade_company: string | null;
+  grade: string | null;
+  cert_number: string | null;
+  notes: string | null;
+  image_front: string | null;
+  image_back: string | null;
+  sort_order: number;
+  created_at: string;
+  // joined fields
+  set_name?: string;
+  parallel_name?: string;
 }
 
 export interface ReferenceItem {
