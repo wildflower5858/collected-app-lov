@@ -20,16 +20,16 @@ export default function ShelfPage() {
     queryKey: ["persons", collectionType],
     queryFn: async () => {
       const { data: personsData } = await supabase
-        .from("persons")
+        .from("drivers")
         .select("*")
         .eq("collection_type", collectionType ?? "f1")
         .order("sort_order");
       const { data: cards } = await supabase
         .from("cards")
-        .select("person_id");
+        .select("driver_id");
       const countMap: Record<string, number> = {};
-      (cards ?? []).forEach((c) => {
-        countMap[c.person_id] = (countMap[c.person_id] || 0) + 1;
+      (cards ?? []).forEach((c: any) => {
+        countMap[c.driver_id] = (countMap[c.driver_id] || 0) + 1;
       });
       return (personsData ?? []).map((d) => ({
         ...d,

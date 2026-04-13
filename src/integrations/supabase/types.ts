@@ -148,6 +148,148 @@ export type Database = {
         }
         Relationships: []
       }
+      f1_cards: {
+        Row: {
+          card_name: string | null
+          card_number: string | null
+          cert_number: string | null
+          copy_number: string | null
+          created_at: string
+          driver_id: string
+          grade: string | null
+          grade_company: string | null
+          graded: boolean
+          id: string
+          image_back: string | null
+          image_front: string | null
+          notes: string | null
+          parallel_id: string | null
+          print_run: string | null
+          set_id: string | null
+          sort_order: number
+          status: string
+          type: string
+        }
+        Insert: {
+          card_name?: string | null
+          card_number?: string | null
+          cert_number?: string | null
+          copy_number?: string | null
+          created_at?: string
+          driver_id: string
+          grade?: string | null
+          grade_company?: string | null
+          graded?: boolean
+          id?: string
+          image_back?: string | null
+          image_front?: string | null
+          notes?: string | null
+          parallel_id?: string | null
+          print_run?: string | null
+          set_id?: string | null
+          sort_order?: number
+          status?: string
+          type?: string
+        }
+        Update: {
+          card_name?: string | null
+          card_number?: string | null
+          cert_number?: string | null
+          copy_number?: string | null
+          created_at?: string
+          driver_id?: string
+          grade?: string | null
+          grade_company?: string | null
+          graded?: boolean
+          id?: string
+          image_back?: string | null
+          image_front?: string | null
+          notes?: string | null
+          parallel_id?: string | null
+          print_run?: string | null
+          set_id?: string | null
+          sort_order?: number
+          status?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "f1_cards_driver_id_fkey"
+            columns: ["driver_id"]
+            isOneToOne: false
+            referencedRelation: "f1_drivers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "f1_cards_parallel_id_fkey"
+            columns: ["parallel_id"]
+            isOneToOne: false
+            referencedRelation: "f1_parallels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "f1_cards_set_id_fkey"
+            columns: ["set_id"]
+            isOneToOne: false
+            referencedRelation: "f1_sets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      f1_drivers: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      f1_parallels: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      f1_sets: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       parallels: {
         Row: {
           id: string

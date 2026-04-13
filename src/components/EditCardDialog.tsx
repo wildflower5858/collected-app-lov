@@ -122,7 +122,7 @@ export default function EditCardDialog({ open, onClose, card, person, onSaved }:
     const { data: urlData } = supabase.storage.from("card-images").getPublicUrl(path);
     const url = urlData.publicUrl;
     const col = side === "front" ? "image_front_url" : "image_back_url";
-    await supabase.from("cards").update({ [col]: url }).eq("id", card.id);
+    await supabase.from("cards").update({ [col]: url } as any).eq("id", card.id);
     setUploading(false);
     onSaved();
   };
