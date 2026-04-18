@@ -11,6 +11,11 @@ import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import F1Shelf from "./pages/F1Shelf";
 import F1Cards from "./pages/F1Cards";
+import KpopGroupsPage from "./pages/KpopGroupsPage";
+import KpopShelfPage from "./pages/KpopShelfPage";
+import KpopCardsPage from "./pages/KpopCardsPage";
+import PokemonShelfPage from "./pages/PokemonShelfPage";
+import PokemonCardsPage from "./pages/PokemonCardsPage";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +29,11 @@ const App = () => (
           <Route path="/" element={<Home />} />
           <Route path="/f1/shelf" element={<F1Shelf />} />
           <Route path="/f1/cards/:driverId" element={<F1Cards />} />
+          <Route path="/kpop/groups" element={<KpopGroupsPage />} />
+          <Route path="/kpop/shelf/:groupId" element={<KpopShelfPage />} />
+          <Route path="/kpop/cards/:binderId" element={<KpopCardsPage />} />
+          <Route path="/pokemon/shelf" element={<PokemonShelfPage />} />
+          <Route path="/pokemon/cards" element={<PokemonCardsPage />} />
           <Route path="/collection/:collectionType" element={<ShelfPage />} />
           <Route path="/person/:personId" element={<CardCollection />} />
           <Route path="/card/:cardId" element={<CardDetail />} />
