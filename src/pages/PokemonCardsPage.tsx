@@ -67,7 +67,7 @@ function PokemonBinderView({ cards }: { cards: any[] }) {
   const start = page * slotsPerSpread;
   const leftCards = cards.slice(start, start + 9);
   const rightCards = cards.slice(start + 9, start + 18);
-  const renderSlot = (card: any, idx: number) => {
+  const renderSlot = (card: any | undefined, idx: number) => {
     if (!card) return <div key={`empty-${idx}`} className="aspect-[2.5/3.5] rounded-lg bg-secondary" />;
     return (
       <div key={card.id} className="aspect-[2.5/3.5] rounded-lg overflow-hidden relative">
@@ -96,9 +96,13 @@ function PokemonBinderView({ cards }: { cards: any[] }) {
         </div>
       </div>
       <div className="flex items-center justify-center gap-4 mt-6">
-        <button onClick={() => setPage((p) => Math.max(0, p - 1))} disabled={page === 0} className="p-2 rounded-md hover:bg-secondary disabled:opacity-30 transition-colors"><ChevronLeftIcon size={18} /></button>
+        <button onClick={() => setPage((p) => Math.max(0, p - 1))} disabled={page === 0} className="p-2 rounded-md hover:bg-secondary disabled:opacity-30 transition-colors">
+          <ChevronLeftIcon size={18} />
+        </button>
         <span className="text-[12px] text-muted-foreground">{page + 1} / {totalSpreads}</span>
-        <button onClick={() => setPage((p) => Math.min(totalSpreads - 1, p + 1))} disabled={page >= totalSpreads - 1} className="p-2 rounded-md hover:bg-secondary disabled:opacity-30 transition-colors"><ChevronRightIcon size={18} /></button>
+        <button onClick={() => setPage((p) => Math.min(totalSpreads - 1, p + 1))} disabled={page >= totalSpreads - 1} className="p-2 rounded-md hover:bg-secondary disabled:opacity-30 transition-colors">
+          <ChevronRightIcon size={18} />
+        </button>
       </div>
     </div>
   );
