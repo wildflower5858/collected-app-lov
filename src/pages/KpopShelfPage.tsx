@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft } from "lucide-react";
 
 function getBinderImage(name: string): string {
-  const slug = name.toLowerCase().replace(/\s+/g, "-");
+  const slug = name.toLowerCase().replace(/\./g, "").replace(/\s+/g, "-");
   return `/binders/kpop/${slug}.svg`;
 }
 
