@@ -158,4 +158,47 @@ function KpopBinderView({ cards }: { cards: any[] }) {
         >
           <ChevronLeftIcon size={18} />
         </button>
-        <span classNa
+        <span className="text-[12px] text-muted-foreground">
+          {page + 1} / {totalSpreads}
+        </span>
+        <button
+          onClick={() => setPage((p) => Math.min(totalSpreads - 1, p + 1))}
+          disabled={page >= totalSpreads - 1}
+          className="p-2 rounded-md hover:bg-secondary disabled:opacity-30 transition-colors"
+        >
+          <ChevronRightIcon size={18} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function KpopGridView({ cards }: { cards: any[] }) {
+  return (
+    <div className="grid grid-cols-4 gap-5 px-5">
+      {cards.map((card) => (
+        <div key={card.id} className="flex flex-col">
+          <div className="aspect-[2.5/3.5] rounded-lg overflow-hidden relative bg-secondary">
+            {card.image_front ? (
+              <img
+                src={card.image_front}
+                alt={card.name ?? ""}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-[11px] text-muted-foreground">No Image</span>
+              </div>
+            )}
+          </div>
+          <div className="mt-2 text-[13px] font-medium text-foreground truncate">
+            {card.name}
+          </div>
+          <div className="text-[11px] text-muted-foreground truncate">
+            {card.type}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
