@@ -5,8 +5,8 @@ import { Settings } from "lucide-react";
 
 const collections = [
   { type: "f1", name: "Formula 1" },
-  { type: "kpop", name: "K-Pop", disabled: true },
-  { type: "pokemon", name: "Pokémon", disabled: true },
+  { type: "kpop", name: "K-Pop" },
+  { type: "pokemon", name: "Pokémon" },
 ];
 
 export default function Home() {
@@ -51,7 +51,7 @@ export default function Home() {
             <button
               key={col.type}
               disabled={col.disabled}
-              onClick={() => navigate(col.type === "f1" ? "/f1/shelf" : `/collection/${col.type}`)}
+              onClick={() => navigate(col.type === "f1" ? "/f1/shelf" : col.type === "kpop" ? "/kpop/groups" : "/pokemon/shelf")}
               className={`group bg-card rounded-lg border border-border p-6 text-left transition-all duration-200
                 ${col.disabled ? "opacity-40 cursor-not-allowed" : "hover:border-foreground/20 active:scale-[0.98]"}`}
             >
