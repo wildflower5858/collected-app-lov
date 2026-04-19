@@ -70,7 +70,7 @@ export default function KpopShelfPage() {
               onClick={() => navigate(`/kpop/cards/${binder.id}`)}
               className="group text-left"
             >
-              <div className="aspect-[2/3] rounded-lg overflow-hidden bg-secondary mb-3">
+              <div className="aspect-[2/3] rounded-lg overflow-hidden mb-3">
                 <img
                   src={getBinderImage(binder.name)}
                   alt={binder.name}
