@@ -13,17 +13,18 @@ export default function Home() {
   const navigate = useNavigate();
   const { data: counts } = useQuery({
     queryKey: ["collection-counts"],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("cards")
-        .select("driver_id, drivers!inner(collection_type)");
-      const map: Record<string, number> = {};
-      (data ?? []).forEach((c: any) => {
-        const ct = c.drivers?.collection_type;
-        if (ct) map[ct] = (map[ct] || 0) + 1;
-      });
-      return map;
-    },
+   queryFn: async () => {
+  const [f1, kpop, pokemon] = await Promise.all([
+    supabase.from("f1_cards").select("id", { count: "exact", head: true }),
+    supabase.from("kpop_cards").select("id", { count: "exact", head: true }),
+    supabase.from("pokemon_cards").select("id", { count: "exact", head: true }),
+  ]);
+  return {
+    f1: f1.count ?? 0,
+    kpop: kpop.count ?? 0,
+    pokemon: pokemon.count ?? 0,
+  };
+},
   });
 
   return (
