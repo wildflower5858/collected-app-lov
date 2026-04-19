@@ -56,7 +56,7 @@ export default function KpopCardsPage() {
 
       <div className="px-12 py-6">
         <button
-          onClick={() => navigate(`/kpop/shelf/${binder?.group_id}`)}
+          onClick={() => navigate(-1)}
           className="flex items-center gap-1 text-body text-muted-foreground hover:text-foreground transition-colors mb-4"
         >
           <ChevronLeft size={14} />

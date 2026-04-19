@@ -62,7 +62,14 @@ export default function F1Shelf() {
               onClick={() => navigate(`/f1/cards/${driver.id}`)}
               className="group text-left"
             >
-              <div className="aspect-[2/3] rounded-lg overflow-hidden bg-secondary mb-3" />
+              <div className="aspect-[2/3] rounded-lg overflow-hidden mb-3">
+  <img
+    src={`/binders/f1/${driver.name.toLowerCase().replace(/\s+/g, "-")}.svg`}
+    alt={driver.name}
+    className="w-full h-full object-cover"
+    onError={(e) => { e.currentTarget.style.display = "none"; }}
+  />
+</div>
               <div className="text-section-title text-foreground">{driver.name}</div>
               <div className="text-[12px] text-muted-foreground mt-0.5">
                 {driver.card_count} card{driver.card_count !== 1 ? "s" : ""}
