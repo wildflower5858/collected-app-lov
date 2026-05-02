@@ -124,7 +124,7 @@ function KpopBinderView({ cards }: { cards: any[] }) {
         {card.image_front ? (
           <img
             src={card.image_front}
-            alt={card.name ?? ""}
+            alt={card.card_name ?? ""}
             className="absolute inset-0 w-full h-full object-cover"
           />
         ) : (
@@ -192,7 +192,7 @@ function KpopGridView({ cards }: { cards: any[] }) {
             )}
           </div>
           <div className="mt-2 text-[13px] font-medium text-foreground truncate">
-            {card.name}
+            {card.card_name}
           </div>
           <div className="text-[11px] text-muted-foreground truncate">
             {card.type}
