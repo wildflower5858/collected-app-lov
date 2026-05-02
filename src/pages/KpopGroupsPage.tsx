@@ -12,7 +12,7 @@ export default function KpopGroupsPage() {
       const { data } = await supabase
         .from("groups")
         .select("*")
-        .order("id");
+        .order("sort_order");
       return data ?? [];
     },
   });
