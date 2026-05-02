@@ -10,7 +10,7 @@ interface ReferenceItem {
 }
 
 interface Group {
-  id: number;
+  id: string;
   name: string;
   sort_order: number;
 }
@@ -185,7 +185,7 @@ export default function Settings() {
 
         <section className="mb-10">
           <h2 className="text-section-title text-foreground mb-4">Pokémon</h2>
-          <RefListSection title="Sets" table="pokemon_sets" />
+          <p className="text-body text-muted-foreground">No reference data for Pokémon yet.</p>
         </section>
 
       </main>
