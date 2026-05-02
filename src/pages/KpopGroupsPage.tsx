@@ -40,16 +40,20 @@ export default function KpopGroupsPage() {
         </button>
         <h1 className="text-page-title text-foreground mb-8">K-Pop</h1>
         <div className="grid grid-cols-4 gap-6">
-          {(groups ?? []).map((group: any) => (
-            <button
-              key={group.id}
-              onClick={() => navigate(`/kpop/shelf/${group.id}`)}
-              className="group text-left"
-            >
-              <div className="aspect-[2/3] rounded-lg bg-secondary mb-3" />
-              <div className="text-section-title text-foreground">{group.name}</div>
-            </button>
-          ))}
+          {(groups ?? []).map((group: any) => {
+            const gid = group.id;
+            const gname = group.name;
+            return (
+              <button
+                key={gid}
+                onClick={() => navigate(`/kpop/shelf/${gid}`)}
+                className="group text-left"
+              >
+                <div className="aspect-[2/3] rounded-lg bg-secondary mb-3" />
+                <div className="text-section-title text-foreground">{gname}</div>
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
