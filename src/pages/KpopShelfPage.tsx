@@ -11,26 +11,27 @@ function getBinderImage(name: string): string {
 export default function KpopShelfPage() {
   const { groupId } = useParams<{ groupId: string }>();
   const navigate = useNavigate();
+  const groupIdNum = Number(groupId);
 
   const { data: group } = useQuery({
-    queryKey: ["kpop-group", groupId],
+    queryKey: ["kpop-group", groupIdNum],
     queryFn: async () => {
       const { data } = await supabase
         .from("groups")
         .select("*")
-        .eq("id", groupId!)
+        .eq("id", groupIdNum)
         .single();
       return data;
     },
   });
 
   const { data: binders } = useQuery({
-    queryKey: ["kpop-binders", groupId],
+    queryKey: ["kpop-binders", groupIdNum],
     queryFn: async () => {
       const { data } = await supabase
         .from("binders")
         .select("*")
-        .eq("group_id", groupId!)
+        .eq("group_id", groupIdNum)
         .order("sort_order");
       return data ?? [];
     },
