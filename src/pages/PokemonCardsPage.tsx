@@ -122,7 +122,7 @@ function PokemonGridView({ cards }: { cards: any[] }) {
               </div>
             )}
           </div>
-          <div className="mt-2 text-[13px] font-medium text-foreground truncate">{card.name}</div>
+          <div className="mt-2 text-[13px] font-medium text-foreground truncate">{card.card_name}</div>
           <div className="text-[11px] text-muted-foreground truncate">{card.card_number}</div>
         </div>
       ))}
