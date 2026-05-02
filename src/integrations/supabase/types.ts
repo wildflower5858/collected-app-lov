@@ -14,6 +14,32 @@ export type Database = {
   }
   public: {
     Tables: {
+      albums: {
+        Row: {
+          group_id: string
+          id: string
+          name: string
+        }
+        Insert: {
+          group_id: string
+          id?: string
+          name: string
+        }
+        Update: {
+          group_id?: string
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "albums_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       binders: {
         Row: {
           created_at: string
@@ -140,6 +166,32 @@ export type Database = {
             columns: ["driver_id"]
             isOneToOne: false
             referencedRelation: "drivers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          group_id: string
+          id: string
+          name: string
+        }
+        Insert: {
+          group_id: string
+          id?: string
+          name: string
+        }
+        Update: {
+          group_id?: string
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
             referencedColumns: ["id"]
           },
         ]
@@ -321,6 +373,32 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      stores: {
+        Row: {
+          group_id: string
+          id: string
+          name: string
+        }
+        Insert: {
+          group_id: string
+          id?: string
+          name: string
+        }
+        Update: {
+          group_id?: string
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stores_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       groups: {
         Row: {
