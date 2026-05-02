@@ -30,7 +30,6 @@ export default function KpopGroupsPage() {
         </div>
         <div className="w-[34px]" />
       </header>
-
       <div className="px-12 py-6">
         <button
           onClick={() => navigate("/")}
@@ -39,9 +38,7 @@ export default function KpopGroupsPage() {
           <ChevronLeft size={14} />
           Collections
         </button>
-
         <h1 className="text-page-title text-foreground mb-8">K-Pop</h1>
-
         <div className="grid grid-cols-4 gap-6">
           {(groups ?? []).map((group: any) => (
             <button
