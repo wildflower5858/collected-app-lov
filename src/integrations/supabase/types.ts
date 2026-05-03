@@ -423,12 +423,15 @@ export type Database = {
       }
       kpop_cards: {
         Row: {
+          album_id: string | null
           binder_id: string
           card_name: string | null
           card_number: string | null
+          card_types: string[]
           cert_number: string | null
           copy_number: string | null
           created_at: string
+          event_id: string | null
           grade: string | null
           grade_company: string | null
           graded: boolean
@@ -441,15 +444,18 @@ export type Database = {
           set_id: string | null
           sort_order: number
           status: string
-          type: string
+          store_id: string | null
         }
         Insert: {
+          album_id?: string | null
           binder_id: string
           card_name?: string | null
           card_number?: string | null
+          card_types?: string[]
           cert_number?: string | null
           copy_number?: string | null
           created_at?: string
+          event_id?: string | null
           grade?: string | null
           grade_company?: string | null
           graded?: boolean
@@ -462,15 +468,18 @@ export type Database = {
           set_id?: string | null
           sort_order?: number
           status?: string
-          type?: string
+          store_id?: string | null
         }
         Update: {
+          album_id?: string | null
           binder_id?: string
           card_name?: string | null
           card_number?: string | null
+          card_types?: string[]
           cert_number?: string | null
           copy_number?: string | null
           created_at?: string
+          event_id?: string | null
           grade?: string | null
           grade_company?: string | null
           graded?: boolean
@@ -483,14 +492,28 @@ export type Database = {
           set_id?: string | null
           sort_order?: number
           status?: string
-          type?: string
+          store_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "kpop_cards_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: false
+            referencedRelation: "albums"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "kpop_cards_binder_id_fkey"
             columns: ["binder_id"]
             isOneToOne: false
             referencedRelation: "binders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kpop_cards_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
             referencedColumns: ["id"]
           },
           {
@@ -505,6 +528,13 @@ export type Database = {
             columns: ["set_id"]
             isOneToOne: false
             referencedRelation: "sets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kpop_cards_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
             referencedColumns: ["id"]
           },
         ]
