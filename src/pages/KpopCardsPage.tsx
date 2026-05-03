@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft, Grid3X3, LayoutGrid, ChevronLeftIcon, ChevronRightIcon, Plus, X, Upload } from "lucide-react";
 import { useState, useRef } from "react";
@@ -151,7 +151,7 @@ function AddCardModal({
 
       if (error) throw error;
 
-      queryClient.invalidateQueries({ queryKey: ["kpop-cards", binderIdNum] });
+      queryClient.invalidateQueries({ queryKey: ["kpop-cards", binderId] });
       onClose();
     } catch (err) {
       console.error("Failed to save card:", err);
