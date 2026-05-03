@@ -25,8 +25,8 @@ function AddCardModal({
   groupId,
   onClose,
 }: {
-  binderId: string;
-  groupId: string;
+  binderId: number;
+  groupId: number;
   onClose: () => void;
 }) {
   const queryClient = useQueryClient();
@@ -151,7 +151,7 @@ function AddCardModal({
 
       if (error) throw error;
 
-      queryClient.invalidateQueries({ queryKey: ["kpop-cards", binderId] });
+      queryClient.invalidateQueries({ queryKey: ["kpop-cards", binderIdNum] });
       onClose();
     } catch (err) {
       console.error("Failed to save card:", err);
@@ -163,7 +163,6 @@ function AddCardModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-background border border-border rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-xl">
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border sticky top-0 bg-background z-10">
           <h2 className="text-[16px] font-semibold text-foreground">Add Card</h2>
           <button
@@ -175,7 +174,6 @@ function AddCardModal({
         </div>
 
         <div className="p-6 space-y-5">
-          {/* Images */}
           <div className="grid grid-cols-2 gap-4">
             {(["front", "back"] as const).map((side) => {
               const preview = side === "front" ? frontPreview : backPreview;
@@ -214,7 +212,6 @@ function AddCardModal({
             })}
           </div>
 
-          {/* Card Name */}
           <div>
             <label className="block text-[12px] font-medium text-muted-foreground mb-1.5 uppercase tracking-wide">
               Card Name
@@ -228,7 +225,6 @@ function AddCardModal({
             />
           </div>
 
-          {/* Card Number */}
           <div>
             <label className="block text-[12px] font-medium text-muted-foreground mb-1.5 uppercase tracking-wide">
               Card Number
@@ -242,7 +238,6 @@ function AddCardModal({
             />
           </div>
 
-          {/* Album */}
           <div>
             <label className="block text-[12px] font-medium text-muted-foreground mb-1.5 uppercase tracking-wide">
               Album
@@ -261,7 +256,6 @@ function AddCardModal({
             </select>
           </div>
 
-          {/* Event */}
           <div>
             <label className="block text-[12px] font-medium text-muted-foreground mb-1.5 uppercase tracking-wide">
               Event
@@ -280,7 +274,6 @@ function AddCardModal({
             </select>
           </div>
 
-          {/* Store */}
           <div>
             <label className="block text-[12px] font-medium text-muted-foreground mb-1.5 uppercase tracking-wide">
               Store
@@ -299,7 +292,6 @@ function AddCardModal({
             </select>
           </div>
 
-          {/* Card Types (multi-select pills) */}
           <div>
             <label className="block text-[12px] font-medium text-muted-foreground mb-1.5 uppercase tracking-wide">
               Type
@@ -325,7 +317,6 @@ function AddCardModal({
             </div>
           </div>
 
-          {/* Status */}
           <div>
             <label className="block text-[12px] font-medium text-muted-foreground mb-1.5 uppercase tracking-wide">
               Status
@@ -348,7 +339,6 @@ function AddCardModal({
             </div>
           </div>
 
-          {/* Notes */}
           <div>
             <label className="block text-[12px] font-medium text-muted-foreground mb-1.5 uppercase tracking-wide">
               Notes
@@ -363,7 +353,6 @@ function AddCardModal({
           </div>
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border sticky bottom-0 bg-background">
           <button
             onClick={onClose}
@@ -390,25 +379,27 @@ export default function KpopCardsPage() {
   const [viewMode, setViewMode] = useState<ViewMode>("binder");
   const [showAddCard, setShowAddCard] = useState(false);
 
+  const binderIdNum = Number(binderId);
+
   const { data: binder } = useQuery({
-    queryKey: ["kpop-binder", binderId],
+    queryKey: ["kpop-binder", binderIdNum],
     queryFn: async () => {
       const { data } = await supabase
         .from("binders")
         .select("*, groups(name)")
-        .eq("id", binderId!)
+        .eq("id", binderIdNum)
         .single();
       return data;
     },
   });
 
   const { data: cards } = useQuery({
-    queryKey: ["kpop-cards", binderId],
+    queryKey: ["kpop-cards", binderIdNum],
     queryFn: async () => {
       const { data } = await supabase
         .from("kpop_cards")
         .select("*")
-        .eq("binder_id", binderId!)
+        .eq("binder_id", binderIdNum)
         .order("sort_order");
       return data ?? [];
     },
@@ -486,7 +477,7 @@ export default function KpopCardsPage() {
 
       {showAddCard && binder && (
         <AddCardModal
-          binderId={binderId!}
+          binderId={binderIdNum}
           groupId={binder.group_id}
           onClose={() => setShowAddCard(false)}
         />
