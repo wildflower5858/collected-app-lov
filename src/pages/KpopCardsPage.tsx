@@ -964,12 +964,12 @@ function KpopBinderView({
     <div>
       <div className="flex gap-6">
         <div className="flex-1 bg-card rounded-lg p-4">
-          <div className="grid grid-cols-3 gap-3">
+          <div className={`grid gap-3 ${pocketCount === 4 ? "grid-cols-2" : "grid-cols-3"}`}>
             {Array.from({ length: slotsPerPage }).map((_, i) => renderSlot(leftCards[i], i))}
           </div>
         </div>
         <div className="flex-1 bg-card rounded-lg p-4">
-          <div className="grid grid-cols-3 gap-3">
+          <div className={`grid gap-3 ${pocketCount === 4 ? "grid-cols-2" : "grid-cols-3"}`}>
             {Array.from({ length: slotsPerPage }).map((_, i) => renderSlot(rightCards[i], i + 9))}
           </div>
         </div>
