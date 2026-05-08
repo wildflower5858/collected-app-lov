@@ -16,6 +16,7 @@ import KpopShelfPage from "./pages/KpopShelfPage";
 import KpopCardsPage from "./pages/KpopCardsPage";
 import PokemonShelfPage from "./pages/PokemonShelfPage";
 import PokemonCardsPage from "./pages/PokemonCardsPage";
+import SuperstarCardsPage from "./pages/SuperstarCardsPage";
 
 const queryClient = new QueryClient();
 
@@ -31,7 +32,8 @@ const App = () => (
           <Route path="/f1/cards/:driverId" element={<F1Cards />} />
           <Route path="/kpop/groups" element={<KpopGroupsPage />} />
           <Route path="/kpop/shelf/:groupId" element={<KpopShelfPage />} />
-          <Route path="/kpop/cards/:binderId" element={<KpopCardsPage />} />
+          <Route path="/kpop/cards/:binderId" element={<KpopCardsPage />} /> 
+          <Route path="/kpop/superstars" element={<SuperstarCardsPage />} />
           <Route path="/pokemon/shelf" element={<PokemonShelfPage />} />
           <Route path="/pokemon/cards" element={<PokemonCardsPage />} />
           <Route path="/collection/:collectionType" element={<ShelfPage />} />
