@@ -885,7 +885,7 @@ export default function KpopCardsPage() {
             No cards yet.
           </div>
         ) : viewMode === "binder" ? (
-          <K<KpopBinderView cards={cards ?? []} onCardClick={setSelectedCard} pocketCount={binder?.pocket_count ?? 9} />popBinderView cards={cards ?? []} onCardClick={setSelectedCard} />
+          <KpopBinderView cards={cards ?? []} onCardClick={setSelectedCard} pocketCount={binder?.pocket_count ?? 9} />popBinderView cards={cards ?? []} onCardClick={setSelectedCard} />
         ) : (
           <KpopGridView cards={cards ?? []} onCardClick={setSelectedCard} />
         )}
