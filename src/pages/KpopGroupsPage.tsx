@@ -46,7 +46,7 @@ export default function KpopGroupsPage() {
             return (
               <button
                 key={gid}
-                onClick={() => navigate(`/kpop/shelf/${gid}`)}
+                onClick={() => gname === "Superstars" ? navigate(`/kpop/superstars`) : navigate(`/kpop/shelf/${gid}`)}
                 className="group text-left"
               >
                 <div className="aspect-[2/3] rounded-lg bg-secondary mb-3" />
