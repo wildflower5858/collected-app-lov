@@ -135,20 +135,18 @@ function AddCardModal({
         image_back = await uploadImage(backFile, path);
       }
 
-      const { error } = await supabase.from("kpop_cards").insert({
-        binder_id: binderId,
-        card_name: form.card_name || null,
-        card_number: form.card_number || null,
-        album_id: form.album_id || null,
-        event_id: form.event_id || null,
-        store_id: form.store_id || null,
-        card_types: form.card_types,
-        status: form.status,
-        notes: form.notes || null,
-        image_front,
-        image_back,
-      });
-
+     const { error } = await supabase.from("kpop_cards").insert({
+  binder_id: binderId,
+  name: form.card_name || null,
+  album_id: form.album_id ? Number(form.album_id) : null,
+  event_id: form.event_id ? Number(form.event_id) : null,
+  store_id: form.store_id ? Number(form.store_id) : null,
+  card_types: form.card_types,
+  status: form.status,
+  notes: form.notes || null,
+  image_front,
+  image_back,
+});
       if (error) throw error;
 
       queryClient.invalidateQueries({ queryKey: ["kpop-cards", binderId] });
