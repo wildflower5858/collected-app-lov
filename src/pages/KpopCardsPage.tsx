@@ -885,7 +885,7 @@ export default function KpopCardsPage() {
             No cards yet.
           </div>
         ) : viewMode === "binder" ? (
-          <KpopBinderView cards={cards ?? []} onCardClick={setSelectedCard} />
+          <K<KpopBinderView cards={cards ?? []} onCardClick={setSelectedCard} pocketCount={binder?.pocket_count ?? 9} />popBinderView cards={cards ?? []} onCardClick={setSelectedCard} />
         ) : (
           <KpopGridView cards={cards ?? []} onCardClick={setSelectedCard} />
         )}
@@ -916,16 +916,19 @@ export default function KpopCardsPage() {
 function KpopBinderView({
   cards,
   onCardClick,
+  pocketCount,
 }: {
   cards: any[];
   onCardClick: (card: any) => void;
+  pocketCount: number;
 }) {
   const [page, setPage] = useState(0);
-  const slotsPerSpread = 18;
+  const slotsPerPage = pocketCount;
+  const slotsPerSpread = pocketCount * 2;
   const totalSpreads = Math.max(1, Math.ceil(cards.length / slotsPerSpread));
   const start = page * slotsPerSpread;
-  const leftCards = cards.slice(start, start + 9);
-  const rightCards = cards.slice(start + 9, start + 18);
+  const leftCards = cards.slice(start, start + slotsPerPage);
+  const rightCards = cards.slice(start + slotsPerPage, start + slotsPerSpread);
 
   const renderSlot = (card: any | undefined, idx: number) => {
     if (!card) {
@@ -962,12 +965,12 @@ function KpopBinderView({
       <div className="flex gap-6">
         <div className="flex-1 bg-card rounded-lg p-4">
           <div className="grid grid-cols-3 gap-3">
-            {Array.from({ length: 9 }).map((_, i) => renderSlot(leftCards[i], i))}
+            {Array.from({ length: slotsPerPage }).map((_, i) => renderSlot(leftCards[i], i))}
           </div>
         </div>
         <div className="flex-1 bg-card rounded-lg p-4">
           <div className="grid grid-cols-3 gap-3">
-            {Array.from({ length: 9 }).map((_, i) => renderSlot(rightCards[i], i + 9))}
+            {Array.from({ length: slotsPerPage }).map((_, i) => renderSlot(rightCards[i], i + 9))}
           </div>
         </div>
       </div>
