@@ -49,7 +49,15 @@ export default function KpopGroupsPage() {
                 onClick={() => gname === "Superstars" ? navigate(`/kpop/superstars`) : navigate(`/kpop/shelf/${gid}`)}
                 className="group text-left"
               >
-                <div className="aspect-[2/3] rounded-lg bg-secondary mb-3" />
+                <div className="aspect-[2/3] rounded-lg bg-secondary mb-3 overflow-hidden">
+                  {gname === "Superstars" ? (
+                    <img
+                      src="/binders/kpop/superstars.svg"
+                      alt="Superstars"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : null}
+              </div>
                 <div className="text-section-title text-foreground">{gname}</div>
               </button>
             );
